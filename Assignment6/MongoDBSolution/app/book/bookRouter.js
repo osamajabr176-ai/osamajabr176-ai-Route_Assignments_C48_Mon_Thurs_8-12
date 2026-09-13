@@ -1,0 +1,18 @@
+const bookRouter = require('express').Router();
+const bookController = require('./bookController');
+bookRouter.post('/', bookController.createBooks);
+bookRouter.post('/index', bookController.createBookIndex);
+bookRouter.post('/batch', bookController.createBooksBatch);
+bookRouter.patch('/:title', bookController.updateBook);
+bookRouter.get('/title/:title', bookController.findBookByTitle);
+bookRouter.get('/year', bookController.findBookBetweenDates);
+bookRouter.get('/genre/:genre', bookController.findByGenre);
+bookRouter.get('/skip', bookController.getbooks);
+bookRouter.get('/year-integer', bookController.findbookswithyearinteger);
+bookRouter.get('/except-genre', bookController.getBooksExceptGenres);
+bookRouter.delete('/before-year', bookController.deleteBooksBeforeYear);
+bookRouter.get('/aggregate1', bookController.aggregateAfter2000Sorted);
+bookRouter.get('/aggregate2', bookController.aggregateAfter2000Projected);
+bookRouter.get('/aggregate3', bookController.aggregateUnwindGenres);
+bookRouter.get('/aggregate4', bookController.aggregateJoinLogs);
+module.exports = bookRouter;

@@ -1,0 +1,72 @@
+db.createCollection("books", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["title"],
+         properties: {
+            title: {
+               bsonType: "string",
+               minLength: 1,
+               description: "must be a non-empty string and is required"
+            }
+         }
+      }
+   }
+})
+
+db.authors.insertOne({ name: "George Orwell" })
+
+db.createCollection("logs", { capped: true, size: 1048576 })
+
+db.books.createIndex({ title: 1 })
+
+db.books.insertOne({ title: "1984", author: "George Orwell", year: 1949, genres: ["Dystopian"] })
+
+db.books.insertMany([
+  { title: "Book One", author: "Author A", year: 2005, genres: ["Fiction"] },
+  { title: "Book Two", author: "Author B", year: 2010, genres: ["Fantasy"] },
+  { title: "Book Three", author: "Author C", year: 2015, genres: ["Horror"] }
+])
+
+db.logs.insertOne({ message: "Book created", timestamp: new Date() })
+
+db.books.updateOne({ title: "Future" }, { $set: { year: 2022 } })
+
+db.books.findOne({ title: "Brave New World" })
+
+db.books.find({ year: { $gte: 1990, $lte: 2010 } })
+
+db.books.find({ genres: "Science Fiction" })
+
+db.books.find().sort({ year: -1 }).skip(2).limit(3)
+
+db.books.find({ year: { $type: "int" } })
+
+db.books.find({ genres: { $nin: ["Horror", "Science Fiction"] } })
+
+db.books.deleteMany({ year: { $lt: 2000 } })
+
+db.books.aggregate([
+  { $match: { year: { $gt: 2000 } } },
+  { $sort: { year: -1 } }
+])
+
+db.books.aggregate([
+  { $match: { year: { $gt: 2000 } } },
+  { $project: { _id: 0, title: 1, author: 1, year: 1 } }
+])
+
+db.books.aggregate([
+  { $unwind: "$genres" }
+])
+
+db.books.aggregate([
+  {
+    $lookup: {
+      from: "logs",
+      localField: "_id",
+      foreignField: "book_id",
+      as: "logs"
+    }
+  }
+])
