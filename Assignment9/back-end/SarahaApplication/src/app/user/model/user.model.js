@@ -40,6 +40,9 @@ const userSchema = new Schema({
         enum : ['Male' , 'Female'],
         default : 'Male'
     },
+    profilePicPath:String,
+    coverImagePath:[String],
+    cvPath:String,
 },
 {
     timestamps : {

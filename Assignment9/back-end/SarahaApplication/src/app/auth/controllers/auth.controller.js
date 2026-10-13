@@ -1,13 +1,12 @@
 import * as authService from '../services/auth.service.js'
-import { toMs } from '../../../common/utils/time.js'
-import {validation} from "../../../common/validation/validation.js";
+import { toMs } from '../../../pkg/utils/time.js'
+import {validation} from "../../../lib/validation/validation.js";
 import {LoginDTO, registerDTO, resetPasswordDTO, sendOtpDTO, verifyAccountDTO} from "../dto/auth.dto.js";
 
 
 export async function register(req , res , next) {
     try {
-        const data = validation(registerDTO,req.body);
-        console.log(data);
+        const data = await validation(registerDTO,req.body);
         const createdUser = await authService.register(data);
         res.status(201).json({
             message : "User creates succesfully",
@@ -71,6 +70,10 @@ export async function resetPassword(req , res , next) {
         const {email,code,newPassword} = data;
         await authService.resetPassword(email,code,newPassword);
         res.sendStatus(204);
+        res.json({
+            success : true,
+            message : "Password reset successfully"
+        })
     } catch (err) {
         next(err);
     }

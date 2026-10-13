@@ -1,4 +1,4 @@
-import {AppError} from "../../common/error/error.js";
+import {AppError} from "../../lib/error/error.js";
 
 export const invailedPassword = new AppError("Invaid Password",403);
 export const invalidCredentials = new AppError("Invalid credentials",400);
